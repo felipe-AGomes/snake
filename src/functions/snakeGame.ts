@@ -76,11 +76,7 @@ export default function makeSnake(ctx: CanvasRenderingContext2D) {
 		drawFood();
 	};
 
-	const endGame = () => {
-		alert('Aqui acabou!');
-	};
-
-	const gameLoop = () => {
+	const gameLoop = (resolve: (value?: unknown) => void) => {
 		const snakeHeader = snake[snake.length - 1];
 		const snakeBody = snake.slice(0, snake.length - 1);
 		clearTimeout(loopTimeout);
@@ -98,18 +94,21 @@ export default function makeSnake(ctx: CanvasRenderingContext2D) {
 			snakeHeader.x < 0 ||
 			snakeHeader.y < 0
 		) {
-			endGame();
+			// fim de jogo
+			resolve();
 			return;
 		}
 		moveSnake();
 
 		loopTimeout = setTimeout(() => {
-			gameLoop();
+			gameLoop(resolve);
 		}, 200);
 	};
 
 	const startGame = () => {
-		gameLoop();
+		return new Promise((resolve) => {
+			gameLoop(resolve);
+		});
 	};
 
 	return {
