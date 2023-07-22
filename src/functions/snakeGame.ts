@@ -297,7 +297,7 @@ export class Game {
 		this.hasEnded = true;
 	}
 
-	public resetGame() {
+	resetGame() {
 		this.canvasElementContain.style.filter = 'none';
 		this.hasEnded = false;
 		this.snake.snakeBody = [];
@@ -343,7 +343,7 @@ export class Game {
 		}
 	}
 
-	public startGame() {
+	startGame() {
 		this.gameLoop();
 	}
 }
