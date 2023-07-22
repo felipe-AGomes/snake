@@ -47,7 +47,7 @@ interface ICanvasRender {
 }
 
 class ScoreController implements IScoreController {
-	private _score: number;
+	private _score: Score;
 	constructor(
 		private scoreElement: HTMLParagraphElement,
 		public _endGameElement: HTMLDivElement,
@@ -142,7 +142,7 @@ class Food implements IFood {
 		return { x, y };
 	}
 
-	generateRandomColor(): string {
+	generateRandomColor(): Color {
 		return `rgb(${Util.randomNumberBetween(100, 155)}, ${Util.randomNumberBetween(
 			100,
 			155,
