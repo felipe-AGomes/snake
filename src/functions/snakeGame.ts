@@ -1,300 +1,86 @@
-// export type DirectionType = 'right' | 'left' | 'top' | 'bottom';
+import { Util } from '@/utils';
 
-// type FoodType = {
-// 	x: number;
-// 	y: number;
-// 	color: string;
-// };
-
-// type KeyTest = {
-// 	test: boolean;
-// 	direction: DirectionType;
-// };
-
-// export class Snake {
-// 	public size: number;
-// 	private canvasSize: number;
-// 	private snake: { x: number; y: number }[];
-// 	private food: FoodType | null;
-// 	private temporaryDirection: DirectionType | null;
-// 	private direction: DirectionType;
-
-// 	constructor(canvasSize: number, size: number) {
-// 		this.canvasSize = canvasSize;
-// 		this.size = size;
-// 		this.snake = [
-// 			{ x: (canvasSize / size / 2) * size, y: (canvasSize / size / 2) * size },
-// 			{
-// 				x: (canvasSize / size / 2) * size + size,
-// 				y: (canvasSize / size / 2) * size,
-// 			},
-// 		];
-// 		this.food = null;
-// 		this.temporaryDirection = null;
-// 		this.direction = 'right';
-// 	}
-
-// 	public setDirection({ key }: KeyboardEvent) {
-// 		const directionMap: KeyTest[] = [
-// 			{ test: key === 'ArrowUp' && this.direction !== 'bottom', direction: 'top' },
-// 			{
-// 				test: key === 'ArrowDown' && this.direction !== 'top',
-// 				direction: 'bottom',
-// 			},
-// 			{
-// 				test: key === 'ArrowRight' && this.direction !== 'left',
-// 				direction: 'right',
-// 			},
-// 			{
-// 				test: key === 'ArrowLeft' && this.direction !== 'right',
-// 				direction: 'left',
-// 			},
-// 		];
-// 		this.temporaryDirection =
-// 			directionMap.find(({ test }) => test)?.direction || this.direction;
-// 	}
-
-// 	public moveSnake() {
-// 		this.direction = this.temporaryDirection || this.direction;
-// 		if (!this.direction) {
-// 			return;
-// 		}
-// 		const snakeHeader = this.snake[this.snake.length - 1];
-// 		const getSnakePosition = {
-// 			top: { x: snakeHeader.x, y: snakeHeader.y - this.size },
-// 			bottom: { x: snakeHeader.x, y: snakeHeader.y + this.size },
-// 			left: { x: snakeHeader.x - this.size, y: snakeHeader.y },
-// 			right: { x: snakeHeader.x + this.size, y: snakeHeader.y },
-// 		};
-// 		this.snake.shift();
-// 		this.snake.push(getSnakePosition[this.direction]);
-// 	}
-
-// 	public getSnake() {
-// 		return this.snake;
-// 	}
-
-// 	public getFood() {
-// 		return this.food;
-// 	}
-
-// 	public updateFood(newFood: FoodType | null) {
-// 		this.food = newFood;
-// 	}
-
-// 	public checkEndGame() {
-// 		const snakeHeader = this.snake[this.snake.length - 1];
-// 		const snakeBody = this.snake.slice(0, this.snake.length - 1);
-// 		const wallCollision =
-// 			snakeHeader.x >= this.canvasSize ||
-// 			snakeHeader.y >= this.canvasSize ||
-// 			snakeHeader.x < 0 ||
-// 			snakeHeader.y < 0;
-// 		const snakeCollision = snakeBody.find(
-// 			(snakeBody) =>
-// 				snakeBody.x === snakeHeader.x && snakeBody.y === snakeHeader.y,
-// 		);
-
-// 		return snakeCollision || wallCollision;
-// 	}
-// }
-
-// export class Game {
-// 	private snake: Snake;
-// 	private pontuationRef: React.RefObject<HTMLParagraphElement>;
-// 	private endGameRef: React.RefObject<HTMLDivElement>;
-// 	private loopTimeout: NodeJS.Timeout | null;
-
-// 	constructor(
-// 		snake: Snake,
-// 		pontuationRef: React.RefObject<HTMLParagraphElement>,
-// 		endGameRef: React.RefObject<HTMLDivElement>,
-// 	) {
-// 		this.snake = snake;
-// 		this.pontuationRef = pontuationRef;
-// 		this.endGameRef = endGameRef;
-// 		this.loopTimeout = null;
-// 	}
-
-// 	public endGame() {
-// 		if (this.loopTimeout) {
-// 			clearInterval(this.loopTimeout);
-// 			this.loopTimeout = null;
-// 			if (this.endGameRef.current) {
-// 				this.endGameRef.current.style.display = 'flex';
-// 				(
-// 					this.endGameRef.current.previousElementSibling as HTMLCanvasElement
-// 				).style.filter = 'blur(5px)';
-// 			}
-// 		}
-// 	}
-
-// 	public checkPontuation() {
-// 		const snakeHeader = this.snake.getSnake()[this.snake.getSnake().length - 1];
-// 		const food = this.snake.getFood();
-// 		if (food && snakeHeader.x === food.x && snakeHeader.y === food.y) {
-// 			this.snake.getSnake().push(food);
-// 			this.snake.updateFood(null);
-// 			if (this.pontuationRef.current) {
-// 				this.pontuationRef.current.innerText = `${
-// 					+this.pontuationRef.current.innerText + 10
-// 				}`;
-// 			}
-// 		}
-// 	}
-
-// 	public gameLoop() {
-// 		this.loopTimeout = setTimeout(() => {
-// 			if (!this.snake.checkEndGame()) {
-// 				this.checkPontuation();
-// 				this.snake.moveSnake();
-// 				this.drawSnake();
-// 				this.drawBoardLines();
-// 				this.drawFood();
-// 				this.gameLoop();
-// 			} else {
-// 				this.endGame();
-// 			}
-// 		}, 300);
-// 	}
-
-// 	public drawSnake() {
-// 		const canvas = document.getElementById('board') as HTMLCanvasElement;
-// 		if (!canvas) return;
-
-// 		const ctx = canvas.getContext('2d');
-// 		if (!ctx) return;
-
-// 		const snake = this.snake.getSnake();
-// 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-// 		snake.forEach(({ x, y }, index) => {
-// 			ctx.fillStyle = index === snake.length - 1 ? 'white' : 'gray';
-// 			ctx.fillRect(x, y, this.snake.size, this.snake.size);
-// 		});
-// 	}
-
-// 	public drawFood() {
-// 		const canvas = document.getElementById('board') as HTMLCanvasElement;
-// 		if (!canvas) return;
-
-// 		const ctx = canvas.getContext('2d');
-// 		if (!ctx) return;
-
-// 		let food = this.snake.getFood();
-// 		if (!food) {
-// 			const canvasLength = (canvas.width - this.snake.size) / this.snake.size;
-// 			food = {
-// 				x: Math.round(Math.random() * canvasLength) * this.snake.size,
-// 				y: Math.round(Math.random() * canvasLength) * this.snake.size,
-// 				color: `rgb(${Math.round(Math.random() * 255)}, ${Math.round(
-// 					Math.random() * 255,
-// 				)}, ${Math.round(Math.random() * 255)})`,
-// 			};
-// 			while (
-// 				this.snake
-// 					.getSnake()
-// 					.find((snake) => snake.x === food?.x && snake.y === food.y)
-// 			) {
-// 				food = {
-// 					x: Math.round(Math.random() * canvasLength) * this.snake.size,
-// 					y: Math.round(Math.random() * canvasLength) * this.snake.size,
-// 					color: `rgb(${Math.round(Math.random() * (255 + 20) - 20)}, ${Math.round(
-// 						Math.random() * (255 + 20) - 20,
-// 					)}, ${Math.round(Math.random() * (255 + 20) - 20)})`,
-// 				};
-// 			}
-// 			this.snake.updateFood(food);
-// 		}
-// 		ctx.fillStyle = this.snake.getFood()?.color!;
-// 		ctx.fillRect(food.x, food.y, this.snake.size, this.snake.size);
-// 	}
-
-// 	public drawBoardLines() {
-// 		const canvas = document.getElementById('board') as HTMLCanvasElement;
-// 		if (!canvas) return;
-
-// 		const ctx = canvas.getContext('2d');
-// 		if (!ctx) return;
-
-// 		const size = this.snake.size;
-// 		const canvasSize = canvas.width;
-// 		ctx.lineWidth = 1;
-// 		ctx.strokeStyle = 'white';
-
-// 		for (let i = size; i < canvasSize; i += size) {
-// 			ctx.beginPath();
-// 			ctx.lineTo(i, 0);
-// 			ctx.lineTo(i, canvasSize);
-// 			ctx.stroke();
-// 		}
-// 		for (let i = size; i < canvasSize; i += size) {
-// 			ctx.beginPath();
-// 			ctx.lineTo(0, i);
-// 			ctx.lineTo(canvasSize, i);
-// 			ctx.stroke();
-// 		}
-// 	}
-
-// 	public setDirection(event: KeyboardEvent) {
-// 		this.snake.setDirection(event);
-// 	}
-
-// 	public resetGame() {
-// 		if (this.endGameRef.current) {
-// 			this.endGameRef.current.style.display = 'none';
-// 			(
-// 				this.endGameRef.current.previousElementSibling as HTMLCanvasElement
-// 			).style.filter = 'none';
-// 		}
-// 		this.startGame();
-// 	}
-
-// 	public startGame() {
-// 		this.gameLoop();
-// 	}
-// }
-
-// export class CanvasRenderer {
-// 	private canvasRef: React.RefObject<HTMLCanvasElement>;
-
-// 	constructor(canvasRef: React.RefObject<HTMLCanvasElement>) {
-// 		this.canvasRef = canvasRef;
-// 	}
-
-// 	public drawCanvas() {
-// 		const canvas = this.canvasRef.current;
-// 		if (!canvas) return;
-
-// 		const ctx = canvas.getContext('2d');
-// 		if (!ctx) return;
-
-// 		const canvasSize = canvas.width;
-// 		ctx.fillStyle = 'black';
-// 		ctx.fillRect(0, 0, canvasSize, canvasSize);
-// 	}
-// }
-
+type DirectionType = 'right' | 'left' | 'top' | 'bottom';
+type KeyMapType = { test: boolean; direction: DirectionType };
 type SnakeBody = { x: number; y: number };
-abstract class AbstractCanvasRender {
-	abstract get size(): number;
-	abstract createCanvas(): void;
-	abstract snakeRender(): void;
-	abstract foodRender(): void;
-	abstract gridRender(): void;
-	abstract initialSnakePosition(): SnakeBody[];
+type Color = string;
+type FoodPositionType = { x: number; y: number };
+type FoodType = FoodPositionType & { color: Color };
+type Score = number;
+
+interface IScoreController {
+	increaseScore(): void;
+	get score(): Score;
+	get endGameElement(): HTMLDivElement;
+	resetGame(): void;
+	endGame(): void;
 }
 
-abstract class AbstractSnake {
-	abstract get snakeBody(): SnakeBody[] | [];
-	abstract set snakeBody(snakeBody: SnakeBody[]);
-	abstract snakeMove(direction: string, size: number): void;
+interface ISnake {
+	get snakeBody(): SnakeBody[] | [];
+	set snakeBody(snakeBody: SnakeBody[]);
+	moveSnake(size: number): void;
+	setInitialSnakePosition(canvasWidth: number, size: number): void;
 }
 
-export class Snake extends AbstractSnake {
+interface IFood {
+	get food(): FoodType | null;
+	set food(newFood: FoodType | null);
+	generateFood(canvasWidth: number, size: number): void;
+	generateRandomPosition(canvasWidth: number, size: number): FoodPositionType;
+	generateRandomColor(): Color;
+}
+
+interface IMoveController {
+	getCurrentDirection(): DirectionType;
+	setCurrentDirection({ key }: KeyboardEvent): void;
+}
+
+interface ICanvasRender {
+	get size(): number;
+	get canvasWidth(): number;
+	get canvasHeight(): number;
+	createCanvas(): void;
+	snakeRender(): void;
+	foodRender(): void;
+	gridRender(): void;
+}
+
+class ScoreController implements IScoreController {
+	private _score: number;
+	constructor(
+		private scoreElement: HTMLParagraphElement,
+		public _endGameElement: HTMLDivElement,
+	) {
+		this._score = 0;
+	}
+
+	increaseScore() {
+		this._score += 10;
+		this.scoreElement.innerText = `${+this.scoreElement.innerText + 10}`;
+	}
+
+	resetGame() {
+		this.endGameElement.style.display = 'none';
+	}
+
+	endGame(): void {
+		this.endGameElement.style.display = 'flex';
+	}
+
+	get endGameElement() {
+		return this._endGameElement;
+	}
+
+	get score() {
+		return this._score;
+	}
+}
+
+class Snake implements ISnake {
 	private _snakeBody: SnakeBody[];
-	constructor() {
-		super();
+	constructor(private moveController: IMoveController) {
+		this.moveController = moveController;
 		this._snakeBody = [];
 	}
 	get snakeBody() {
@@ -304,27 +90,135 @@ export class Snake extends AbstractSnake {
 		this._snakeBody = snakeBody;
 	}
 
-	snakeMove(direction: string, size: number): void {
-		this._snakeBody = this._snakeBody.map(({ x, y }) => ({ x: x + size, y }));
+	moveSnake(size: number): void {
+		const snakeHead = this.snakeBody[this.snakeBody.length - 1];
+
+		const changeDirection = {
+			right: { x: snakeHead.x + size, y: snakeHead.y },
+			left: { x: snakeHead.x - size, y: snakeHead.y },
+			top: { x: snakeHead.x, y: snakeHead.y - size },
+			bottom: { x: snakeHead.x, y: snakeHead.y + size },
+		};
+		this.snakeBody.shift();
+		this.snakeBody.push(
+			changeDirection[this.moveController.getCurrentDirection()],
+		);
+	}
+
+	setInitialSnakePosition(canvasWidth: number, size: number) {
+		this.snakeBody = [
+			{
+				x: (canvasWidth / size / 2) * 30 - size,
+				y: (canvasWidth / size / 2) * 30,
+			},
+			{
+				x: (canvasWidth / size / 2) * 30,
+				y: (canvasWidth / size / 2) * 30,
+			},
+		];
 	}
 }
 
-export class CanvasRender extends AbstractCanvasRender {
-	private canvasWidth: number;
-	private canvasHeight: number;
+class Food implements IFood {
+	private _food: FoodType | null;
+	constructor(private snake: ISnake) {
+		this._food = null;
+	}
+	generateFood(canvasWidth: number, size: number) {
+		this.food = {
+			...this.generateRandomPosition(canvasWidth, size),
+			color: this.generateRandomColor(),
+		};
+	}
+
+	generateRandomPosition(canvasWidth: number, size: number): FoodPositionType {
+		let x = Util.randomNumberUpTo(canvasWidth / size - 1) * size;
+		let y = Util.randomNumberUpTo(canvasWidth / size - 1) * size;
+		while (this.snake.snakeBody.find((snake) => snake.x === x && snake.y === y)) {
+			x = Util.randomNumberUpTo(canvasWidth / size - 1) * size;
+			y = Util.randomNumberUpTo(canvasWidth / size - 1) * size;
+		}
+
+		return { x, y };
+	}
+
+	generateRandomColor(): string {
+		return `rgb(${Util.randomNumberBetween(100, 155)}, ${Util.randomNumberBetween(
+			100,
+			155,
+		)}, ${Util.randomNumberBetween(100, 155)})`;
+	}
+
+	get food() {
+		return this._food;
+	}
+
+	set food(newFood: FoodType | null) {
+		this._food = newFood;
+	}
+}
+
+class MoveController implements IMoveController {
+	private currentDirection: DirectionType;
+	private temporaryDirection: DirectionType;
+	constructor() {
+		this.currentDirection = 'right';
+		this.temporaryDirection = 'right';
+	}
+
+	getCurrentDirection() {
+		this.currentDirection = this.temporaryDirection;
+		return this.currentDirection;
+	}
+
+	setCurrentDirection({ key }: KeyboardEvent) {
+		const keyMap: KeyMapType[] = [
+			{
+				test: key === 'ArrowRight' && this.currentDirection !== 'left',
+				direction: 'right',
+			},
+			{
+				test: key === 'ArrowLeft' && this.currentDirection !== 'right',
+				direction: 'left',
+			},
+			{
+				test: key === 'ArrowUp' && this.currentDirection !== 'bottom',
+				direction: 'top',
+			},
+			{
+				test: key === 'ArrowDown' && this.currentDirection !== 'top',
+				direction: 'bottom',
+			},
+		];
+		this.temporaryDirection =
+			keyMap.find(({ test }) => test)?.direction ?? this.currentDirection;
+	}
+}
+
+class CanvasRender implements ICanvasRender {
+	private _canvasWidth: number;
+	private _canvasHeight: number;
 	constructor(
 		private canvas: HTMLCanvasElement,
 		private ctx: CanvasRenderingContext2D,
 		private _size: number,
-		private snake: AbstractSnake,
+		private snake: ISnake,
+		private food: IFood,
 	) {
-		super();
-		this.canvasWidth = canvas.width;
-		this.canvasHeight = canvas.height;
+		this._canvasWidth = canvas.width;
+		this._canvasHeight = canvas.height;
 	}
 
 	get size() {
 		return this._size;
+	}
+
+	get canvasWidth() {
+		return this._canvasWidth;
+	}
+
+	get canvasHeight() {
+		return this._canvasHeight;
 	}
 
 	createCanvas(): void {
@@ -332,22 +226,9 @@ export class CanvasRender extends AbstractCanvasRender {
 		this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 	}
 
-	initialSnakePosition(): SnakeBody[] {
-		return [
-			{
-				x: (this.canvasWidth / this.size / 2) * 30 - this.size,
-				y: (this.canvasWidth / this.size / 2) * 30,
-			},
-			{
-				x: (this.canvasWidth / this.size / 2) * 30,
-				y: (this.canvasWidth / this.size / 2) * 30,
-			},
-		];
-	}
-
 	snakeRender(): void {
 		if (this.snake.snakeBody.length === 0)
-			this.snake.snakeBody = this.initialSnakePosition();
+			this.snake.setInitialSnakePosition(this.canvasWidth, this.size);
 		this.snake.snakeBody.forEach(({ x, y }, index) => {
 			if (index === this.snake.snakeBody.length - 1) {
 				this.ctx.fillStyle = 'gray';
@@ -358,7 +239,14 @@ export class CanvasRender extends AbstractCanvasRender {
 			this.ctx.fillRect(x, y, this.size, this.size);
 		});
 	}
-	foodRender(): void {}
+	foodRender(): void {
+		if (!this.food.food) {
+			this.food.generateFood(this.canvasWidth, this.size);
+		}
+		const { x, y, color } = this.food.food!;
+		this.ctx.fillStyle = color;
+		this.ctx.fillRect(x, y, this.size, this.size);
+	}
 	gridRender(): void {
 		this.ctx.lineWidth = 1;
 		this.ctx.strokeStyle = 'white';
@@ -378,48 +266,99 @@ export class CanvasRender extends AbstractCanvasRender {
 	}
 }
 
-abstract class AbstractMoveController {
-	abstract get currentDirection(): string;
-}
-
-export class MoveController {
-	private _currentDirection: string;
-	constructor() {
-		this._currentDirection = 'right';
-	}
-
-	get currentDirection() {
-		return this._currentDirection;
-	}
-}
-
 export class Game {
 	private timeoutId: NodeJS.Timeout | null;
+	private hasEnded: boolean;
+	private canvasElementContain: HTMLDivElement;
 	constructor(
-		private canvasRender: AbstractCanvasRender,
-		private snake: AbstractSnake,
-		private moveController: AbstractMoveController,
+		private canvasRender: ICanvasRender,
+		private snake: ISnake,
+		private food: IFood,
+		private scoreController: IScoreController,
 	) {
+		this.hasEnded = false;
 		this.timeoutId = null;
+		this.canvasElementContain = this.scoreController.endGameElement
+			.previousElementSibling as HTMLDivElement;
+	}
+
+	private checkPoint() {
+		const snakeHead = this.snake.snakeBody[this.snake.snakeBody.length - 1];
+		if (snakeHead.x === this.food.food?.x && snakeHead.y === this.food.food.y) {
+			this.snake.snakeBody = [snakeHead, ...this.snake.snakeBody];
+			this.scoreController.increaseScore();
+			this.food.food = null;
+		}
+	}
+
+	private finishGame() {
+		this.scoreController.endGame();
+		this.canvasElementContain.style.filter = 'blur(5px)';
+		this.hasEnded = true;
+	}
+
+	public resetGame() {
+		this.canvasElementContain.style.filter = 'none';
+		this.hasEnded = false;
+		this.snake.snakeBody = [];
+		this.gameLoop();
+		this.scoreController.resetGame();
+	}
+
+	private checkEndGame() {
+		const snakeHead = this.snake.snakeBody[this.snake.snakeBody.length - 1];
+		const snakeCollision = this.snake.snakeBody.find(
+			(snake, index) =>
+				snake.x === snakeHead.x &&
+				snake.y === snakeHead.y &&
+				index < this.snake.snakeBody.length - 1,
+		);
+		const wallCollision =
+			snakeHead.x < 0 ||
+			snakeHead.y < 0 ||
+			snakeHead.x >= this.canvasRender.canvasWidth ||
+			snakeHead.y >= this.canvasRender.canvasHeight;
+
+		if (snakeCollision || wallCollision) {
+			this.finishGame();
+		}
 	}
 
 	private gameLoop() {
 		if (this.timeoutId) clearTimeout(this.timeoutId);
 
-		this.canvasRender.createCanvas();
-		this.canvasRender.gridRender();
-		this.canvasRender.snakeRender();
-		this.snake.snakeMove(
-			this.moveController.currentDirection,
-			this.canvasRender.size,
-		);
+		if (!this.hasEnded) {
+			this.canvasRender.createCanvas();
+			this.canvasRender.gridRender();
+			this.canvasRender.snakeRender();
+			this.canvasRender.foodRender();
+			this.snake.moveSnake(this.canvasRender.size);
+			this.checkEndGame();
+			this.canvasRender.snakeRender();
+			this.checkPoint();
 
-		this.timeoutId = setTimeout(() => {
-			this.gameLoop();
-		}, 300);
+			this.timeoutId = setTimeout(() => {
+				this.gameLoop();
+			}, 300);
+		}
 	}
 
 	public startGame() {
 		this.gameLoop();
 	}
 }
+
+export const makeGame = (
+	canvas: HTMLCanvasElement,
+	ctx: CanvasRenderingContext2D,
+	scoreElement: HTMLParagraphElement,
+	endGameElement: HTMLDivElement,
+) => {
+	const moveController = new MoveController();
+	const scoreController = new ScoreController(scoreElement, endGameElement);
+	const snake = new Snake(moveController);
+	const food = new Food(snake);
+	const canvasRender = new CanvasRender(canvas!, ctx!, 30, snake, food);
+	const game = new Game(canvasRender, snake, food, scoreController);
+	return { game, moveController };
+};
