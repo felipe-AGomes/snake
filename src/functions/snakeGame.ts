@@ -1,14 +1,14 @@
-import { Util } from '@/utils';
+import { IUtil, Util } from '../utils/index';
 
-type DirectionType = 'right' | 'left' | 'top' | 'bottom';
-type KeyMapType = { test: boolean; direction: DirectionType };
-type SnakeBody = { x: number; y: number };
-type Color = string;
-type FoodPositionType = { x: number; y: number };
-type FoodType = FoodPositionType & { color: Color };
-type Score = number;
+export type DirectionType = 'right' | 'left' | 'top' | 'bottom';
+export type KeyMapType = { test: boolean; direction: DirectionType };
+export type SnakeBody = { x: number; y: number };
+export type Color = string;
+export type FoodPositionType = { x: number; y: number };
+export type FoodType = FoodPositionType & { color: Color };
+export type Score = number;
 
-interface IScoreController {
+export interface IScoreController {
 	increaseScore(): void;
 	get score(): Score;
 	get endGameElement(): HTMLDivElement;
@@ -16,14 +16,14 @@ interface IScoreController {
 	endGame(): void;
 }
 
-interface ISnake {
+export interface ISnake {
 	get snakeBody(): SnakeBody[] | [];
 	set snakeBody(snakeBody: SnakeBody[]);
 	moveSnake(size: number): void;
 	setInitialSnakePosition(canvasWidth: number, size: number): void;
 }
 
-interface IFood {
+export interface IFood {
 	get food(): FoodType | null;
 	set food(newFood: FoodType | null);
 	generateFood(canvasWidth: number, size: number): void;
@@ -31,12 +31,12 @@ interface IFood {
 	generateRandomColor(): Color;
 }
 
-interface IMoveController {
+export interface IMoveController {
 	getCurrentDirection(): DirectionType;
-	setCurrentDirection({ key }: KeyboardEvent): void;
+	setTemporaryDirection({ key }: KeyboardEvent): void;
 }
 
-interface ICanvasRender {
+export interface ICanvasRender {
 	get size(): number;
 	get canvasWidth(): number;
 	get canvasHeight(): number;
@@ -46,7 +46,128 @@ interface ICanvasRender {
 	gridRender(): void;
 }
 
-class ScoreController implements IScoreController {
+export class MoveController implements IMoveController {
+	private currentDirection: DirectionType;
+	private temporaryDirection: DirectionType;
+	constructor() {
+		this.currentDirection = 'right';
+		this.temporaryDirection = 'right';
+	}
+
+	getCurrentDirection(): DirectionType {
+		this.currentDirection = this.temporaryDirection;
+		return this.currentDirection;
+	}
+
+	setTemporaryDirection({ key }: KeyboardEvent): void {
+		const keyMap: KeyMapType[] = [
+			{
+				test: key === 'ArrowRight' && this.currentDirection !== 'left',
+				direction: 'right',
+			},
+			{
+				test: key === 'ArrowLeft' && this.currentDirection !== 'right',
+				direction: 'left',
+			},
+			{
+				test: key === 'ArrowUp' && this.currentDirection !== 'bottom',
+				direction: 'top',
+			},
+			{
+				test: key === 'ArrowDown' && this.currentDirection !== 'top',
+				direction: 'bottom',
+			},
+		];
+		this.temporaryDirection =
+			keyMap.find(({ test }) => test)?.direction ?? this.currentDirection;
+	}
+}
+
+export class Snake implements ISnake {
+	private _snakeBody: SnakeBody[];
+	constructor(private moveController: IMoveController) {
+		this.moveController = moveController;
+		this._snakeBody = [];
+	}
+	get snakeBody() {
+		return this._snakeBody;
+	}
+	set snakeBody(snakeBody: SnakeBody[]) {
+		this._snakeBody = snakeBody;
+	}
+
+	moveSnake(size: number): void {
+		const snakeHead = this.snakeBody[this.snakeBody.length - 1];
+
+		const changeDirection = {
+			right: { x: snakeHead.x + size, y: snakeHead.y },
+			left: { x: snakeHead.x - size, y: snakeHead.y },
+			top: { x: snakeHead.x, y: snakeHead.y - size },
+			bottom: { x: snakeHead.x, y: snakeHead.y + size },
+		};
+		this.snakeBody.shift();
+		this.snakeBody.push(
+			changeDirection[this.moveController.getCurrentDirection()],
+		);
+	}
+
+	setInitialSnakePosition(canvasWidth: number, size: number): void {
+		this.snakeBody = [
+			{
+				x: (canvasWidth / size / 2) * 30 - size,
+				y: (canvasWidth / size / 2) * 30,
+			},
+			{
+				x: (canvasWidth / size / 2) * 30,
+				y: (canvasWidth / size / 2) * 30,
+			},
+		];
+	}
+}
+
+export class Food implements IFood {
+	private _food: FoodType | null;
+	constructor(private snake: ISnake, private util: IUtil) {
+		this._food = null;
+	}
+	generateFood(canvasWidth: number, size: number): void {
+		this.food = {
+			...this.generateRandomPosition(canvasWidth, size),
+			color: this.generateRandomColor(),
+		};
+	}
+
+	generateRandomPosition(canvasWidth: number, size: number): FoodPositionType {
+		let x = this.util.randomNumberUpTo(canvasWidth / size - 1) * size;
+		let y = this.util.randomNumberUpTo(canvasWidth / size - 1) * size;
+		while (this.snake.snakeBody.find((snake) => snake.x === x && snake.y === y)) {
+			x = this.util.randomNumberUpTo(canvasWidth / size - 1) * size;
+			y = this.util.randomNumberUpTo(canvasWidth / size - 1) * size;
+		}
+
+		return { x, y };
+	}
+
+	generateRandomColor(): Color {
+		return `rgb(${this.util.randomNumberBetween(
+			100,
+			155,
+		)}, ${this.util.randomNumberBetween(
+			100,
+			155,
+		)}, ${this.util.randomNumberBetween(100, 155)})`;
+	}
+
+	get food() {
+		return this._food;
+	}
+
+	set food(newFood: FoodType | null) {
+		this._food = newFood;
+	}
+}
+
+export class ScoreController implements IScoreController {
 	private _score: Score;
 	constructor(
 		private scoreElement: HTMLParagraphElement,
@@ -76,126 +197,7 @@ class ScoreController implements IScoreController {
 		return this._score;
 	}
 }
-
-class Snake implements ISnake {
-	private _snakeBody: SnakeBody[];
-	constructor(private moveController: IMoveController) {
-		this.moveController = moveController;
-		this._snakeBody = [];
-	}
-	get snakeBody() {
-		return this._snakeBody;
-	}
-	set snakeBody(snakeBody: SnakeBody[]) {
-		this._snakeBody = snakeBody;
-	}
-
-	moveSnake(size: number): void {
-		const snakeHead = this.snakeBody[this.snakeBody.length - 1];
-
-		const changeDirection = {
-			right: { x: snakeHead.x + size, y: snakeHead.y },
-			left: { x: snakeHead.x - size, y: snakeHead.y },
-			top: { x: snakeHead.x, y: snakeHead.y - size },
-			bottom: { x: snakeHead.x, y: snakeHead.y + size },
-		};
-		this.snakeBody.shift();
-		this.snakeBody.push(
-			changeDirection[this.moveController.getCurrentDirection()],
-		);
-	}
-
-	setInitialSnakePosition(canvasWidth: number, size: number) {
-		this.snakeBody = [
-			{
-				x: (canvasWidth / size / 2) * 30 - size,
-				y: (canvasWidth / size / 2) * 30,
-			},
-			{
-				x: (canvasWidth / size / 2) * 30,
-				y: (canvasWidth / size / 2) * 30,
-			},
-		];
-	}
-}
-
-class Food implements IFood {
-	private _food: FoodType | null;
-	constructor(private snake: ISnake) {
-		this._food = null;
-	}
-	generateFood(canvasWidth: number, size: number) {
-		this.food = {
-			...this.generateRandomPosition(canvasWidth, size),
-			color: this.generateRandomColor(),
-		};
-	}
-
-	generateRandomPosition(canvasWidth: number, size: number): FoodPositionType {
-		let x = Util.randomNumberUpTo(canvasWidth / size - 1) * size;
-		let y = Util.randomNumberUpTo(canvasWidth / size - 1) * size;
-		while (this.snake.snakeBody.find((snake) => snake.x === x && snake.y === y)) {
-			x = Util.randomNumberUpTo(canvasWidth / size - 1) * size;
-			y = Util.randomNumberUpTo(canvasWidth / size - 1) * size;
-		}
-
-		return { x, y };
-	}
-
-	generateRandomColor(): Color {
-		return `rgb(${Util.randomNumberBetween(100, 155)}, ${Util.randomNumberBetween(
-			100,
-			155,
-		)}, ${Util.randomNumberBetween(100, 155)})`;
-	}
-
-	get food() {
-		return this._food;
-	}
-
-	set food(newFood: FoodType | null) {
-		this._food = newFood;
-	}
-}
-
-class MoveController implements IMoveController {
-	private currentDirection: DirectionType;
-	private temporaryDirection: DirectionType;
-	constructor() {
-		this.currentDirection = 'right';
-		this.temporaryDirection = 'right';
-	}
-
-	getCurrentDirection() {
-		this.currentDirection = this.temporaryDirection;
-		return this.currentDirection;
-	}
-
-	setCurrentDirection({ key }: KeyboardEvent) {
-		const keyMap: KeyMapType[] = [
-			{
-				test: key === 'ArrowRight' && this.currentDirection !== 'left',
-				direction: 'right',
-			},
-			{
-				test: key === 'ArrowLeft' && this.currentDirection !== 'right',
-				direction: 'left',
-			},
-			{
-				test: key === 'ArrowUp' && this.currentDirection !== 'bottom',
-				direction: 'top',
-			},
-			{
-				test: key === 'ArrowDown' && this.currentDirection !== 'top',
-				direction: 'bottom',
-			},
-		];
-		this.temporaryDirection =
-			keyMap.find(({ test }) => test)?.direction ?? this.currentDirection;
-	}
-}
-
-class CanvasRender implements ICanvasRender {
+export class CanvasRender implements ICanvasRender {
 	private _canvasWidth: number;
 	private _canvasHeight: number;
 	constructor(
@@ -209,15 +211,15 @@ class CanvasRender implements ICanvasRender {
 		this._canvasHeight = canvas.height;
 	}
 
-	get size() {
+	get size(): number {
 		return this._size;
 	}
 
-	get canvasWidth() {
+	get canvasWidth(): number {
 		return this._canvasWidth;
 	}
 
-	get canvasHeight() {
+	get canvasHeight(): number {
 		return this._canvasHeight;
 	}
 
@@ -239,6 +241,7 @@ class CanvasRender implements ICanvasRender {
 			this.ctx.fillRect(x, y, this.size, this.size);
 		});
 	}
+
 	foodRender(): void {
 		if (!this.food.food) {
 			this.food.generateFood(this.canvasWidth, this.size);
@@ -247,6 +250,7 @@ class CanvasRender implements ICanvasRender {
 		this.ctx.fillStyle = color;
 		this.ctx.fillRect(x, y, this.size, this.size);
 	}
+
 	gridRender(): void {
 		this.ctx.lineWidth = 1;
 		this.ctx.strokeStyle = 'white';
@@ -354,10 +358,11 @@ export const makeGame = (
 	scoreElement: HTMLParagraphElement,
 	endGameElement: HTMLDivElement,
 ) => {
+	const util = new Util();
 	const moveController = new MoveController();
-	const scoreController = new ScoreController(scoreElement, endGameElement);
 	const snake = new Snake(moveController);
-	const food = new Food(snake);
+	const scoreController = new ScoreController(scoreElement, endGameElement);
+	const food = new Food(snake, util);
 	const canvasRender = new CanvasRender(canvas!, ctx!, 30, snake, food);
 	const game = new Game(canvasRender, snake, food, scoreController);
 	return { game, moveController };
