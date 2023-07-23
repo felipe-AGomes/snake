@@ -27,7 +27,7 @@ export default function Home() {
 		);
 		document.addEventListener(
 			'keydown',
-			moveController.setCurrentDirection.bind(moveController),
+			moveController.setTemporaryDirection.bind(moveController),
 		);
 		setGame(game);
 	}, []);

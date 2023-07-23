@@ -9,9 +9,10 @@ export type FoodType = FoodPositionType & { color: Color };
 export type Score = number;
 
 export interface IScoreController {
-	increaseScore(): void;
 	get score(): Score;
+	set score(newScore: number);
 	get endGameElement(): HTMLDivElement;
+	increaseScore(): void;
 	resetGame(): void;
 	endGame(): void;
 }
@@ -196,6 +197,11 @@ export class ScoreController implements IScoreController {
 	get score() {
 		return this._score;
 	}
+
+	set score(newScore) {
+		this._score = newScore;
+		this.scoreElement.innerText = '00';
+	}
 }
 export class CanvasRender implements ICanvasRender {
 	private _canvasWidth: number;
@@ -304,6 +310,7 @@ export class Game {
 	resetGame() {
 		this.canvasElementContain.style.filter = 'none';
 		this.hasEnded = false;
+		this.scoreController.score = 0;
 		this.snake.snakeBody = [];
 		this.gameLoop();
 		this.scoreController.resetGame();
