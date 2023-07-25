@@ -26,14 +26,16 @@ export class Render {
 		if (!snakeBody) {
 			this.snake.create(this.canvas, this.blockSize);
 			snakeBody = this.snake.snakeBody;
-			this.ctx.fillStyle = 'white';
-
-			snakeBody?.forEach(({ x, y }, index) => {
-				if (index === snakeBody?.length! - 1) this.ctx.fillStyle = 'gray';
-				this.ctx.fillRect(x, y, this.blockSize, this.blockSize);
-			});
 			return;
 		}
+
+		console.log(snakeBody);
+		this.ctx.fillStyle = 'white';
+
+		snakeBody?.forEach(({ x, y }, index) => {
+			if (index === snakeBody?.length! - 1) this.ctx.fillStyle = 'gray';
+			this.ctx.fillRect(x, y, this.blockSize, this.blockSize);
+		});
 	}
 
 	gridRender() {

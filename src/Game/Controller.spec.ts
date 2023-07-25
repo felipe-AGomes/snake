@@ -47,4 +47,48 @@ describe('Controller', () => {
 
 		expect(spySnakeMove).toHaveBeenCalled();
 	});
+
+	it('property direction must be "top"', () => {
+		const { controller: sut } = makeGameTests();
+		let mockKeyBoardEvent: any = {
+			key: 'arrowUp',
+		};
+
+		sut.keyboardListener(mockKeyBoardEvent);
+
+		expect(sut.direction).toBe('top');
+	});
+
+	it('property direction must be "right"', () => {
+		const { controller: sut } = makeGameTests();
+		let mockKeyBoardEvent: any = {
+			key: 'arrowRight',
+		};
+
+		sut.keyboardListener(mockKeyBoardEvent);
+
+		expect(sut.direction).toBe('right');
+	});
+
+	it('property direction must be "bottom"', () => {
+		const { controller: sut } = makeGameTests();
+		let mockKeyBoardEvent: any = {
+			key: 'arrowDown',
+		};
+
+		sut.keyboardListener(mockKeyBoardEvent);
+
+		expect(sut.direction).toBe('bottom');
+	});
+
+	it('property direction must be "left"', () => {
+		const { controller: sut } = makeGameTests();
+		let mockKeyBoardEvent: any = {
+			key: 'arrowLeft',
+		};
+
+		sut.keyboardListener(mockKeyBoardEvent);
+
+		expect(sut.direction).toBe('left');
+	});
 });
