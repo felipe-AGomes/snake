@@ -24,7 +24,10 @@ describe('Util', () => {
 	});
 
 	it('should return a array with two numbers', () => {
-		const result = Util.randomCoordinates(mockCanvas, 30);
+		const result = Util.randomCoordinates({
+			canvasWidth: mockCanvas.width,
+			blockSize: 30,
+		});
 
 		expect(result).toHaveLength(2);
 		expect(result[0]).toBeGreaterThan(0);

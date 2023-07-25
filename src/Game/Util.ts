@@ -1,11 +1,14 @@
 export class Util {
-	static randomCoordinates(
-		canvas: HTMLCanvasElement,
-		blockSize: number,
-	): [number, number] {
-		const x = this.randomNumberUpTo(canvas.width / blockSize - 1) * blockSize
-		const y = this.randomNumberUpTo(canvas.width / blockSize - 1) * blockSize
-		
+	static randomCoordinates({
+		canvasWidth,
+		blockSize,
+	}: {
+		canvasWidth: number;
+		blockSize: number;
+	}): [number, number] {
+		const x = this.randomNumberUpTo(canvasWidth / blockSize - 1) * blockSize;
+		const y = this.randomNumberUpTo(canvasWidth / blockSize - 1) * blockSize;
+
 		return [x, y];
 	}
 

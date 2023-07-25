@@ -10,12 +10,16 @@ type Food = {
 export class Render {
 	public ctx: CanvasRenderingContext2D;
 	public food: Food | null = null;
+	public canvasWidth: number;
+	public canvasHeight: number;
 	constructor(
 		public canvas: HTMLCanvasElement,
 		public blockSize: number,
 		public snake: Snake,
 	) {
 		this.canvas = canvas;
+		this.canvasWidth = canvas.width;
+		this.canvasHeight = canvas.height;
 
 		const ctx = canvas.getContext('2d');
 		if (!ctx) {
@@ -26,13 +30,16 @@ export class Render {
 
 	canvasRender() {
 		this.ctx.fillStyle = 'black';
-		this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+		this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 	}
 
 	snakeRender() {
 		let snakeBody = this.snake.snakeBody;
 		if (!snakeBody) {
-			this.snake.create(this.canvas, this.blockSize);
+			this.snake.create({
+				canvasWidth: this.canvas.width,
+				blockSize: this.blockSize,
+			});
 			snakeBody = this.snake.snakeBody;
 			return;
 		}
@@ -46,23 +53,26 @@ export class Render {
 	gridRender() {
 		this.ctx.lineWidth = 1;
 		this.ctx.strokeStyle = 'gray';
-		for (let i = this.blockSize; i < this.canvas.width; i += this.blockSize) {
+		for (let i = this.blockSize; i < this.canvasWidth; i += this.blockSize) {
 			this.ctx.beginPath();
 			this.ctx.lineTo(i, 0);
 			this.ctx.lineTo(i, this.canvas.height);
 			this.ctx.stroke();
 		}
-		for (let i = this.blockSize; i < this.canvas.height; i += this.blockSize) {
+		for (let i = this.blockSize; i < this.canvasHeight; i += this.blockSize) {
 			this.ctx.beginPath();
 			this.ctx.lineTo(0, i);
-			this.ctx.lineTo(this.canvas.width, i);
+			this.ctx.lineTo(this.canvasWidth, i);
 			this.ctx.stroke();
 		}
 	}
 
 	foodRender() {
 		if (!this.food) {
-			const [x, y] = Util.randomCoordinates(this.canvas, this.blockSize);
+			const [x, y] = Util.randomCoordinates({
+				canvasWidth: this.canvas.width,
+				blockSize: this.blockSize,
+			});
 			this.food = {
 				x,
 				y,

@@ -16,10 +16,16 @@ export class Snake {
 		this._snakeBody = newValue;
 	}
 
-	create(canvas: HTMLCanvasElement, blockSize: number) {
+	create({
+		canvasWidth,
+		blockSize,
+	}: {
+		canvasWidth: number;
+		blockSize: number;
+	}) {
 		this.snakeBody = [
-			{ x: canvas.width / 2 - blockSize, y: canvas.width / 2 },
-			{ x: canvas.width / 2, y: canvas.width / 2 },
+			{ x: canvasWidth / 2 - blockSize, y: canvasWidth / 2 },
+			{ x: canvasWidth / 2, y: canvasWidth / 2 },
 		];
 	}
 

@@ -10,7 +10,7 @@ describe('Render', () => {
 	});
 
 	it('should call the method fillRect(0, 0, 600, 600)', () => {
-		const { render: sut, canvas } = makeGameTests();
+		const { render: sut } = makeGameTests();
 
 		const spyCtxFillRect = jest.spyOn(sut.ctx, 'fillRect');
 
@@ -19,14 +19,14 @@ describe('Render', () => {
 		expect(spyCtxFillRect).toHaveBeenCalledWith(
 			0,
 			0,
-			canvas.width,
-			canvas.height,
+			sut.canvas.width,
+			sut.canvas.height,
 		);
 	});
 
 	it('if snake.snakeBody is empty, should call the method snake.create', () => {
-		const { render: sut, snake } = makeGameTests();
-		const spySnakeCreate = jest.spyOn(snake, 'create');
+		const { render: sut } = makeGameTests();
+		const spySnakeCreate = jest.spyOn(sut.snake, 'create');
 
 		sut.snakeRender();
 
@@ -34,19 +34,19 @@ describe('Render', () => {
 	});
 
 	it('if snake.snakeBody is empty, shoud create a new snake', () => {
-		const { render: sut, snake, initialSnakeBody } = makeGameTests();
-		const spySnakeCreate = jest.spyOn(snake, 'create');
+		const { render: sut, initialSnakeBody } = makeGameTests();
+		const spySnakeCreate = jest.spyOn(sut.snake, 'create');
 
 		sut.snakeRender();
 
 		expect(spySnakeCreate).toHaveBeenCalledTimes(1);
-		expect(snake.snakeBody).toEqual(initialSnakeBody);
+		expect(sut.snake.snakeBody).toEqual(initialSnakeBody);
 	});
 
 	it('if snake.snakeBody is not empty, should not be call snake.create', () => {
-		const { render: sut, snake } = makeGameTests();
-		const spySnakeCreate = jest.spyOn(snake, 'create');
-		snake.snakeBody = [{ x: 30, y: 30 }];
+		const { render: sut } = makeGameTests();
+		const spySnakeCreate = jest.spyOn(sut.snake, 'create');
+		sut.snake.snakeBody = [{ x: 30, y: 30 }];
 
 		sut.snakeRender();
 

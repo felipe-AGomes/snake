@@ -1,10 +1,10 @@
-import { makeGameTests } from "./Game.spec";
+import { makeGameTests } from './Game.spec';
 
 describe('Snake', () => {
 	it('should create a new snake with initial values', () => {
 		const { snake: sut, canvas, blockSize, initialSnakeBody } = makeGameTests();
 
-		sut.create(canvas, blockSize);
+		sut.create({ canvasWidth: canvas.width, blockSize });
 
 		expect(sut.snakeBody).toEqual(initialSnakeBody);
 	});

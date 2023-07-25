@@ -14,8 +14,8 @@ export const makeGameTests = () => {
 
 describe('Game', () => {
 	it('should call the this.loop()', () => {
-		const { game: sut, controller } = makeGameTests();
-		const spyControllerLoop = jest.spyOn(controller, 'loop');
+		const { game: sut } = makeGameTests();
+		const spyControllerLoop = jest.spyOn(sut.controller, 'loop');
 
 		sut.start();
 
