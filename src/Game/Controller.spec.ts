@@ -56,7 +56,7 @@ describe('Controller', () => {
 
 		sut.keyboardListener(mockKeyBoardEvent);
 
-		expect(sut.direction).toBe('top');
+		expect(sut.temporaryDirection).toBe('top');
 	});
 
 	it('property direction must be "right"', () => {
@@ -78,7 +78,7 @@ describe('Controller', () => {
 
 		sut.keyboardListener(mockKeyBoardEvent);
 
-		expect(sut.direction).toBe('bottom');
+		expect(sut.temporaryDirection).toBe('bottom');
 	});
 
 	it('property direction must be "left"', () => {
@@ -90,7 +90,7 @@ describe('Controller', () => {
 
 		sut.keyboardListener(mockKeyBoardEvent);
 
-		expect(sut.direction).toBe('left');
+		expect(sut.temporaryDirection).toBe('left');
 	});
 
 	it('should not change direction if key is inverse of sut.direction', () => {

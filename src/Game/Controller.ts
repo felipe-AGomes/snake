@@ -5,15 +5,23 @@ type KeyBoardMap = { test: boolean; result: Direction };
 
 export class Controller {
 	public _direction: Direction = 'right';
+	public _temporaryDirection: Direction = 'right';
 	public interval: NodeJS.Timeout | null = null;
 	constructor(public render: Render, public snake: Snake) {}
 
-	set direction(newDirection: Direction) {
+	set direction(newDirection) {
 		this._direction = newDirection;
 	}
 
 	get direction() {
 		return this._direction;
+	}
+
+	set temporaryDirection(newTemporaryDirection) {
+		this._temporaryDirection = newTemporaryDirection;
+	}
+	get temporaryDirection() {
+		return this._temporaryDirection;
 	}
 
 	keyboardListener({ key }: KeyboardEvent) {
@@ -29,7 +37,7 @@ export class Controller {
 			},
 			{ test: 'ArrowLeft' === key && this.direction !== 'right', result: 'left' },
 		];
-		this.direction =
+		this.temporaryDirection =
 			keyboardMap.find(({ test }) => test)?.result ?? this.direction;
 	}
 
@@ -39,6 +47,7 @@ export class Controller {
 		this.render.snakeRender();
 		this.render.gridRender();
 		this.snake.move(this.direction, this.render.blockSize);
+		this.direction = this.temporaryDirection;
 		this.render.snakeRender();
 		this.interval = setTimeout(() => this.loop(), 300);
 	}
