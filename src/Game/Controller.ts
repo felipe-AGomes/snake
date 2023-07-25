@@ -1,30 +1,45 @@
 import { Render } from './Render';
 import { Direction, Snake } from './Snake';
 
-type KeyBoardMap = { test: string; result: Direction };
+type KeyBoardMap = { test: boolean; result: Direction };
 
 export class Controller {
-	public direction: Direction = 'right';
+	public _direction: Direction = 'right';
+	public interval: NodeJS.Timeout | null = null;
 	constructor(public render: Render, public snake: Snake) {}
+
+	set direction(newDirection: Direction) {
+		this._direction = newDirection;
+	}
+
+	get direction() {
+		return this._direction;
+	}
 
 	keyboardListener({ key }: KeyboardEvent) {
 		const keyboardMap: KeyBoardMap[] = [
-			{ test: 'arrowUp', result: 'top' },
-			{ test: 'arrowDown', result: 'bottom' },
-			{ test: 'arrowRight', result: 'right' },
-			{ test: 'arrowLeft', result: 'left' },
+			{ test: 'ArrowUp' === key && this.direction !== 'bottom', result: 'top' },
+			{
+				test: 'ArrowDown' === key && this.direction !== 'top',
+				result: 'bottom',
+			},
+			{
+				test: 'ArrowRight' === key && this.direction !== 'left',
+				result: 'right',
+			},
+			{ test: 'ArrowLeft' === key && this.direction !== 'right', result: 'left' },
 		];
-
 		this.direction =
-			keyboardMap.find(({ test }) => test === key)?.result ?? this.direction;
+			keyboardMap.find(({ test }) => test)?.result ?? this.direction;
 	}
 
 	loop() {
+		if (this.interval) clearInterval(this.interval);
 		this.render.canvasRender();
 		this.render.snakeRender();
 		this.render.gridRender();
 		this.snake.move(this.direction, this.render.blockSize);
 		this.render.snakeRender();
-		setTimeout(() => this.loop(), 300);
+		this.interval = setTimeout(() => this.loop(), 300);
 	}
 }

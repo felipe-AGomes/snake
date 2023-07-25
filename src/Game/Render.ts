@@ -28,10 +28,7 @@ export class Render {
 			snakeBody = this.snake.snakeBody;
 			return;
 		}
-
-		console.log(snakeBody);
 		this.ctx.fillStyle = 'white';
-
 		snakeBody?.forEach(({ x, y }, index) => {
 			if (index === snakeBody?.length! - 1) this.ctx.fillStyle = 'gray';
 			this.ctx.fillRect(x, y, this.blockSize, this.blockSize);
@@ -41,7 +38,6 @@ export class Render {
 	gridRender() {
 		this.ctx.lineWidth = 1;
 		this.ctx.strokeStyle = 'gray';
-
 		for (let i = this.blockSize; i < this.canvas.width; i += this.blockSize) {
 			this.ctx.beginPath();
 			this.ctx.lineTo(i, 0);

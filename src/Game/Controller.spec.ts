@@ -51,7 +51,7 @@ describe('Controller', () => {
 	it('property direction must be "top"', () => {
 		const { controller: sut } = makeGameTests();
 		let mockKeyBoardEvent: any = {
-			key: 'arrowUp',
+			key: 'ArrowUp',
 		};
 
 		sut.keyboardListener(mockKeyBoardEvent);
@@ -62,7 +62,7 @@ describe('Controller', () => {
 	it('property direction must be "right"', () => {
 		const { controller: sut } = makeGameTests();
 		let mockKeyBoardEvent: any = {
-			key: 'arrowRight',
+			key: 'ArrowRight',
 		};
 
 		sut.keyboardListener(mockKeyBoardEvent);
@@ -73,7 +73,7 @@ describe('Controller', () => {
 	it('property direction must be "bottom"', () => {
 		const { controller: sut } = makeGameTests();
 		let mockKeyBoardEvent: any = {
-			key: 'arrowDown',
+			key: 'ArrowDown',
 		};
 
 		sut.keyboardListener(mockKeyBoardEvent);
@@ -83,12 +83,60 @@ describe('Controller', () => {
 
 	it('property direction must be "left"', () => {
 		const { controller: sut } = makeGameTests();
+		sut.direction = 'top';
 		let mockKeyBoardEvent: any = {
-			key: 'arrowLeft',
+			key: 'ArrowLeft',
 		};
 
 		sut.keyboardListener(mockKeyBoardEvent);
 
 		expect(sut.direction).toBe('left');
+	});
+
+	it('should not change direction if key is inverse of sut.direction', () => {
+		const { controller: sut } = makeGameTests();
+		sut.direction = 'bottom';
+		let mockKeyBoardEvent: any = {
+			key: 'ArrowTop',
+		};
+
+		sut.keyboardListener(mockKeyBoardEvent);
+
+		expect(sut.direction).toBe('bottom');
+	});
+
+	it('should not change direction if key is inverse of sut.direction', () => {
+		const { controller: sut } = makeGameTests();
+		sut.direction = 'top';
+		let mockKeyBoardEvent: any = {
+			key: 'ArrowDown',
+		};
+
+		sut.keyboardListener(mockKeyBoardEvent);
+
+		expect(sut.direction).toBe('top');
+	});
+
+	it('should not change direction if key is inverse of sut.direction', () => {
+		const { controller: sut } = makeGameTests();
+		sut.direction = 'left';
+		let mockKeyBoardEvent: any = {
+			key: 'ArrowRight',
+		};
+
+		sut.keyboardListener(mockKeyBoardEvent);
+
+		expect(sut.direction).toBe('left');
+	});
+
+	it('should not change direction if key is inverse of sut.direction', () => {
+		const { controller: sut } = makeGameTests();
+		let mockKeyBoardEvent: any = {
+			key: 'ArrowLeft',
+		};
+
+		sut.keyboardListener(mockKeyBoardEvent);
+
+		expect(sut.direction).toBe('right');
 	});
 });

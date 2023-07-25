@@ -20,10 +20,11 @@ export default function Home() {
 		if (!scoreElement || !canvas || !endGameElement)
 			throw new Error('Ref não instanciada');
 		const { game, controller } = makeGame(canvas, 30);
-		// document.addEventListener(
-		// 	'keydown',
-		// 	moveController.setTemporaryDirection.bind(moveController),
-		// );
+		document.addEventListener(
+			'keydown',
+			controller.keyboardListener.bind(controller),
+		);
+
 		setGame(game);
 	}, []);
 

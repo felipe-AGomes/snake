@@ -30,24 +30,23 @@ export class Snake {
 		snakeBody.shift();
 		const directionMap = [
 			{
-				test: 'right',
+				test: 'right' === direction,
 				result: [...snakeBody, { ...snakeHead, x: snakeHead.x + blockSize }],
 			},
 			{
-				test: 'top',
+				test: 'top' === direction,
 				result: [...snakeBody, { ...snakeHead, y: snakeHead.y - blockSize }],
 			},
 			{
-				test: 'left',
+				test: 'left' === direction,
 				result: [...snakeBody, { ...snakeHead, x: snakeHead.x - blockSize }],
 			},
 			{
-				test: 'bottom',
+				test: 'bottom' === direction,
 				result: [...snakeBody, { ...snakeHead, y: snakeHead.y + blockSize }],
 			},
 		];
 		this.snakeBody =
-			directionMap.find(({ test }) => test === direction)?.result ??
-			this.snakeBody;
+			directionMap.find(({ test }) => test)?.result ?? this.snakeBody;
 	}
 }
