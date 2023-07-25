@@ -57,6 +57,7 @@ export class Controller {
 		const snakeHead = this.snake.snakeBody[this.snake.snakeBody?.length - 1];
 		if (snakeHead.x === food.x && snakeHead.y === food.y) {
 			this._score = 10;
+			this.snake.increase();
 		}
 	}
 
@@ -81,12 +82,12 @@ export class Controller {
 
 	loop() {
 		if (this.interval) clearInterval(this.interval);
-		this.render.canvasRender();
 		this.render.snakeRender();
+		this.render.canvasRender();
+		this.checkEndGame();
 		this.render.gridRender();
 		this.render.foodRender();
 		this.checkPoint();
-		this.checkEndGame();
 		this.direction = this.temporaryDirection;
 		this.snake.move(this.direction, this.render.blockSize);
 		this.render.snakeRender();

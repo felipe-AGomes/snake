@@ -107,6 +107,20 @@ describe('Controller', () => {
 		expect(sut.score).toBe(10);
 	});
 
+	it('should call the method snake.increase', () => {
+		const { controller: sut } = makeGameTests();
+		sut.snake.snakeBody = [
+			{ x: 30, y: 0 },
+			{ x: 0, y: 0 },
+		];
+		sut.render.food = { x: 0, y: 0, color: '#fff' };
+		const spySnakeIncrease = jest.spyOn(sut.snake, 'increase');
+
+		sut.checkPoint();
+
+		expect(spySnakeIncrease).toHaveBeenCalled();
+	});
+
 	it('should not increment point if snake header position is direfent the food position', () => {
 		const { controller: sut } = makeGameTests();
 		sut.snake.snakeBody = [

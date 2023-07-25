@@ -29,6 +29,14 @@ export class Snake {
 		];
 	}
 
+	increase() {
+		if (!this.snakeBody) throw new Error('Snake não renderizada');
+		this.snakeBody = [
+			this.snakeBody[this.snakeBody?.length - 1],
+			...this.snakeBody,
+		];
+	}
+
 	move(direction: Direction, blockSize: number) {
 		if (!this.snakeBody) throw new Error('Snake ainda não foi criada');
 		const snakeBody = [...this.snakeBody];

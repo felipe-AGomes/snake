@@ -60,4 +60,13 @@ describe('Snake', () => {
 
 		expect(sut.snakeBody).toEqual(snakeBody);
 	});
+
+	it('should increase the snakeBody', () => {
+		const { snake: sut, initialSnakeBody } = makeGameTests();
+		sut.snakeBody = initialSnakeBody;
+
+		sut.increase();
+
+		expect(sut.snakeBody).toEqual([initialSnakeBody[1], ...initialSnakeBody]);
+	});
 });
