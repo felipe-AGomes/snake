@@ -2,7 +2,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import S from './home.module.css';
 import { AiOutlinePlayCircle } from 'react-icons/ai';
-import { Game, makeGame } from '@/functions/snakeGame';
+import { Game } from '@/Game/Game';
+import { makeGame } from '@/Game/makeGame';
 
 export default function Home() {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -10,25 +11,19 @@ export default function Home() {
 	const endGameRef = useRef<HTMLDivElement>(null);
 	const [game, setGame] = useState<Game | null>(null);
 
-	game?.startGame();
+	game?.start();
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
-		const ctx = canvas?.getContext('2d');
 		const endGameElement = endGameRef.current;
 		const scoreElement = scoreBoardRef.current;
-		if (!scoreElement || !ctx || !canvas || !endGameElement)
+		if (!scoreElement || !canvas || !endGameElement)
 			throw new Error('Ref não instanciada');
-		const { game, moveController } = makeGame(
-			canvas,
-			ctx,
-			scoreElement,
-			endGameElement,
-		);
-		document.addEventListener(
-			'keydown',
-			moveController.setTemporaryDirection.bind(moveController),
-		);
+		const { game, controller } = makeGame(canvas, 30);
+		// document.addEventListener(
+		// 	'keydown',
+		// 	moveController.setTemporaryDirection.bind(moveController),
+		// );
 		setGame(game);
 	}, []);
 
@@ -55,7 +50,7 @@ export default function Home() {
 			>
 				<h2>Fim de jogo</h2>
 				<button
-					onClick={() => game?.resetGame()}
+					// onClick={() => game?.resetGame()}
 					className={S.resetGame}
 				>
 					<AiOutlinePlayCircle size={20} />
