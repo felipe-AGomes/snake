@@ -1,7 +1,15 @@
 import { Snake } from './Snake';
+import { Util } from './Util';
+
+type Food = {
+	x: number;
+	y: number;
+	color: string;
+};
 
 export class Render {
 	public ctx: CanvasRenderingContext2D;
+	public food: Food | null = null;
 	constructor(
 		public canvas: HTMLCanvasElement,
 		public blockSize: number,
@@ -50,5 +58,19 @@ export class Render {
 			this.ctx.lineTo(this.canvas.width, i);
 			this.ctx.stroke();
 		}
+	}
+
+	foodRender() {
+		if (!this.food) {
+			const [x, y] = Util.randomCoordinates(this.canvas, this.blockSize);
+			this.food = {
+				x,
+				y,
+				color: Util.randomColor(),
+			};
+			return;
+		}
+		this.ctx.fillStyle = this.food?.color;
+		this.ctx.fillRect(this.food.x, this.food.y, this.blockSize, this.blockSize);
 	}
 }

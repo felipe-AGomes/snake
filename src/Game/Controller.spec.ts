@@ -4,39 +4,38 @@ describe('Controller', () => {
 	it('should call the render.canvasRender()', () => {
 		const { controller: sut, render } = makeGameTests();
 
-		const spyRenderCanvas = jest.spyOn(render, 'canvasRender');
+		const spyCanvasRender = jest.spyOn(render, 'canvasRender');
 
 		sut.loop();
 
-		expect(spyRenderCanvas).toHaveBeenCalled();
-	});
-
-	it('should call the render.snake()', () => {
-		const { controller: sut, render } = makeGameTests();
-
-		const spyRenderSnakeRender = jest.spyOn(render, 'snakeRender');
-
-		sut.loop();
-
-		expect(spyRenderSnakeRender).toHaveBeenCalled();
+		expect(spyCanvasRender).toHaveBeenCalled();
 	});
 
 	it('should call the render.snakeRender()', () => {
 		const { controller: sut, render } = makeGameTests();
-		const spyRenderSnakeRender = jest.spyOn(render, 'snakeRender');
+		const spySnakeRender = jest.spyOn(render, 'snakeRender');
 
 		sut.loop();
 
-		expect(spyRenderSnakeRender).toHaveBeenCalled();
+		expect(spySnakeRender).toHaveBeenCalled();
 	});
 
 	it('should call the render.gridRender', () => {
 		const { controller: sut, render } = makeGameTests();
-		const spyRenderSnakeRender = jest.spyOn(render, 'gridRender');
+		const spyGridRender = jest.spyOn(render, 'gridRender');
 
 		sut.loop();
 
-		expect(spyRenderSnakeRender).toHaveBeenCalled();
+		expect(spyGridRender).toHaveBeenCalled();
+	});
+
+	it('should call the render.foodRender', () => {
+		const { controller: sut, render } = makeGameTests();
+		const spyFoodRender = jest.spyOn(render, 'foodRender');
+
+		sut.loop();
+
+		expect(spyFoodRender).toHaveBeenCalled();
 	});
 
 	it('should call the snake.move', () => {

@@ -46,8 +46,9 @@ export class Controller {
 		this.render.canvasRender();
 		this.render.snakeRender();
 		this.render.gridRender();
-		this.snake.move(this.direction, this.render.blockSize);
+		this.render.foodRender();
 		this.direction = this.temporaryDirection;
+		this.snake.move(this.direction, this.render.blockSize);
 		this.render.snakeRender();
 		this.interval = setTimeout(() => this.loop(), 300);
 	}
