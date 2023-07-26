@@ -17,7 +17,12 @@ export class Render {
 		public blockSize: number,
 		public snake: Snake,
 	) {
+		const [x, y] = Util.randomCoordinates({
+			canvasWidth: this.canvas.width,
+			blockSize: this.blockSize,
+		});
 		this.canvas = canvas;
+		this.food = { x, y, color: Util.randomColor() };
 		this.canvasWidth = canvas.width;
 		this.canvasHeight = canvas.height;
 
@@ -69,15 +74,21 @@ export class Render {
 
 	foodRender() {
 		if (!this.food) {
-			const [x, y] = Util.randomCoordinates({
-				canvasWidth: this.canvas.width,
-				blockSize: this.blockSize,
-			});
-			this.food = {
-				x,
-				y,
-				color: Util.randomColor(),
-			};
+			do {
+				const [x, y] = Util.randomCoordinates({
+					canvasWidth: this.canvas.width,
+					blockSize: this.blockSize,
+				});
+				this.food = {
+					x,
+					y,
+					color: Util.randomColor(),
+				};
+			} while (
+				!this.snake.snakeBody?.some(
+					(snake) => snake.x === this.food?.x && snake.y === this.food.y,
+				)
+			);
 			return;
 		}
 		this.ctx.fillStyle = this.food?.color;

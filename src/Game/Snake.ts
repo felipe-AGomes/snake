@@ -38,7 +38,7 @@ export class Snake {
 	}
 
 	move(direction: Direction, blockSize: number) {
-		if (!this.snakeBody) throw new Error('Snake ainda não foi criada');
+		if (!this.snakeBody) return;
 		const snakeBody = [...this.snakeBody];
 		const snakeHead = snakeBody[snakeBody.length - 1];
 		snakeBody.shift();

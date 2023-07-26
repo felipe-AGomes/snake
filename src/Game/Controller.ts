@@ -57,6 +57,8 @@ export class Controller {
 		const snakeHead = this.snake.snakeBody[this.snake.snakeBody?.length - 1];
 		if (snakeHead.x === food.x && snakeHead.y === food.y) {
 			this._score = 10;
+			this.render.food = null;
+			this.render.foodRender();
 			this.snake.increase();
 		}
 	}
@@ -82,15 +84,14 @@ export class Controller {
 
 	loop() {
 		if (this.interval) clearInterval(this.interval);
-		this.render.snakeRender();
 		this.render.canvasRender();
-		this.checkEndGame();
-		this.render.gridRender();
-		this.render.foodRender();
-		this.checkPoint();
 		this.direction = this.temporaryDirection;
 		this.snake.move(this.direction, this.render.blockSize);
+		this.render.foodRender();
+		this.render.gridRender();
 		this.render.snakeRender();
+		this.checkEndGame();
+		this.checkPoint();
 		if (!this.endGame) {
 			this.interval = setTimeout(() => this.loop(), 300);
 		}

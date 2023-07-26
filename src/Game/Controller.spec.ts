@@ -107,6 +107,46 @@ describe('Controller', () => {
 		expect(sut.score).toBe(10);
 	});
 
+	it('should reset the food when register the point', () => {
+		const { controller: sut } = makeGameTests();
+		sut.snake.snakeBody = [
+			{ x: 30, y: 0 },
+			{ x: 0, y: 0 },
+		];
+		sut.render.food = { x: 0, y: 0, color: '#fff' };
+
+		sut.checkPoint();
+
+		expect(sut.render.food).not.toEqual({ x: 0, y: 0, color: '#fff' });
+	});
+
+	it('should the render.foodRender when poit register', () => {
+		const { controller: sut } = makeGameTests();
+		sut.snake.snakeBody = [
+			{ x: 30, y: 0 },
+			{ x: 0, y: 0 },
+		];
+		sut.render.food = { x: 0, y: 0, color: '#fff' };
+		const spyRenderRegister = jest.spyOn(sut.render, 'foodRender');
+
+		sut.checkPoint();
+
+		expect(spyRenderRegister).toHaveBeenCalled();
+	});
+
+	it('should not reset the food when point not regisner', () => {
+		const { controller: sut } = makeGameTests();
+		sut.snake.snakeBody = [
+			{ x: 30, y: 0 },
+			{ x: 0, y: 0 },
+		];
+		sut.render.food = { x: 300, y: 30, color: '#fff' };
+
+		sut.checkPoint();
+
+		expect(sut.render.food).toEqual({ x: 300, y: 30, color: '#fff' });
+	});
+
 	it('should call the method snake.increase', () => {
 		const { controller: sut } = makeGameTests();
 		sut.snake.snakeBody = [
