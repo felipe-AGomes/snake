@@ -1,8 +1,13 @@
 export class ElementController {
-	constructor(public scoreElement: HTMLParagraphElement) {}
+	constructor(
+		public scoreElement: HTMLParagraphElement,
+		public gameOverElement: HTMLDivElement,
+	) {}
 	increaseScoreboard(score: number) {
 		this.scoreElement.innerText = `${score}`;
 	}
 
-	gameOver() {}
+	gameOver() {
+		this.gameOverElement.style.display = 'flex';
+	}
 }

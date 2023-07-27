@@ -1,10 +1,11 @@
 import { makeGame } from './makeGame';
 
 const mockCanvas = document.createElement('canvas');
-const mockParagrath = document.createElement('p');
+const mockScoreElement = document.createElement('p');
+const mockElementGameOver = document.createElement('div');
 
 export const makeGameTests = () => {
-	const game = makeGame(mockCanvas, 30, mockParagrath);
+	const game = makeGame(mockCanvas, 30, mockScoreElement, mockElementGameOver);
 	const { canvas, blockSize } = game;
 	const initialSnakeBody = [
 		{ x: canvas.width / 2 - blockSize, y: canvas.width / 2 },

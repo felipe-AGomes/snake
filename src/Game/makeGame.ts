@@ -8,11 +8,20 @@ export const makeGame = (
 	canvas: HTMLCanvasElement,
 	blockSize: number,
 	scoreElement: HTMLParagraphElement,
+	gameOverElement: HTMLDivElement,
 ) => {
-	const elementController = new ElementController(scoreElement);
+	const elementController = new ElementController(scoreElement, gameOverElement);
 	const snake = new Snake();
 	const render = new Render(canvas, blockSize, snake);
 	const gameController = new GameController(render, snake, elementController);
 	const game = new Game(gameController);
-	return { render, gameController, game, canvas: canvas, snake, blockSize };
+	return {
+		render,
+		gameController,
+		game,
+		canvas: canvas,
+		snake,
+		blockSize,
+		elementController,
+	};
 };

@@ -15,15 +15,15 @@ export default function Home() {
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
-		const endGameElement = endGameRef.current;
+		const gameOverElement = endGameRef.current;
 		const scoreElement = scoreBoardRef.current;
-		if (!scoreElement || !canvas || !endGameElement)
+		if (!scoreElement || !canvas || !gameOverElement)
 			throw new Error('Ref não instanciada');
 		const { game, gameController } = makeGame(
 			canvas,
 			30,
 			scoreElement,
-			endGameElement,
+			gameOverElement,
 		);
 		document.addEventListener(
 			'keydown',
