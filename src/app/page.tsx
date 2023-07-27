@@ -19,10 +19,15 @@ export default function Home() {
 		const scoreElement = scoreBoardRef.current;
 		if (!scoreElement || !canvas || !endGameElement)
 			throw new Error('Ref não instanciada');
-		const { game, controller } = makeGame(canvas, 30);
+		const { game, gameController } = makeGame(
+			canvas,
+			30,
+			scoreElement,
+			endGameElement,
+		);
 		document.addEventListener(
 			'keydown',
-			controller.keyboardListener.bind(controller),
+			gameController.keyboardListener.bind(gameController),
 		);
 
 		setGame(game);
@@ -40,8 +45,8 @@ export default function Home() {
 				<canvas
 					ref={canvasRef}
 					id='board'
-					width='600'
-					height='600'
+					width='300'
+					height='300'
 				></canvas>
 			</div>
 			<div

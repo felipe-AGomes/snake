@@ -85,7 +85,7 @@ export class Render {
 					color: Util.randomColor(),
 				};
 			} while (
-				!this.snake.snakeBody?.some(
+				this.snake.snakeBody?.some(
 					(snake) => snake.x === this.food?.x && snake.y === this.food.y,
 				)
 			);

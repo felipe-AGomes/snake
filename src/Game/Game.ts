@@ -1,8 +1,8 @@
-import { Controller } from './Controller';
+import { GameController } from './GameController';
 
 export class Game {
-	constructor(public controller: Controller) {}
+	constructor(public gameController: GameController) {}
 	start() {
-		this.controller.loop();
+		this.gameController.loop();
 	}
 }

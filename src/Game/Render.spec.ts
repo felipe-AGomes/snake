@@ -11,7 +11,6 @@ describe('Render', () => {
 
 	it('should call the method fillRect(0, 0, 600, 600)', () => {
 		const { render: sut } = makeGameTests();
-
 		const spyCtxFillRect = jest.spyOn(sut.ctx, 'fillRect');
 
 		sut.canvasRender();

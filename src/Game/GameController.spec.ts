@@ -1,9 +1,15 @@
 import { makeGameTests } from './Game.spec';
 
-describe('Controller', () => {
-	it('should call the render.canvasRender()', () => {
-		const { controller: sut } = makeGameTests();
+export const initialSnakePosition = [
+	{ x: 30, y: 0 },
+	{ x: 0, y: 0 },
+];
 
+export const foodWinPosition = { x: 0, y: 0, color: '#fff' };
+
+describe('GameControllerller', () => {
+	it('should call the render.canvasRender()', () => {
+		const { gameController: sut } = makeGameTests();
 		const spyCanvasRender = jest.spyOn(sut.render, 'canvasRender');
 
 		sut.loop();
@@ -12,7 +18,7 @@ describe('Controller', () => {
 	});
 
 	it('should call the render.snakeRender()', () => {
-		const { controller: sut } = makeGameTests();
+		const { gameController: sut } = makeGameTests();
 		const spySnakeRender = jest.spyOn(sut.render, 'snakeRender');
 
 		sut.loop();
@@ -21,7 +27,7 @@ describe('Controller', () => {
 	});
 
 	it('should call the render.gridRender', () => {
-		const { controller: sut } = makeGameTests();
+		const { gameController: sut } = makeGameTests();
 		const spyGridRender = jest.spyOn(sut.render, 'gridRender');
 
 		sut.loop();
@@ -30,7 +36,7 @@ describe('Controller', () => {
 	});
 
 	it('should call the render.foodRender', () => {
-		const { controller: sut } = makeGameTests();
+		const { gameController: sut } = makeGameTests();
 		const spyFoodRender = jest.spyOn(sut.render, 'foodRender');
 
 		sut.loop();
@@ -39,7 +45,7 @@ describe('Controller', () => {
 	});
 
 	it('should call the checkEndGame', () => {
-		const { controller: sut } = makeGameTests();
+		const { gameController: sut } = makeGameTests();
 		const spyCheckEndGame = jest.spyOn(sut, 'checkEndGame');
 
 		sut.loop();
@@ -48,7 +54,7 @@ describe('Controller', () => {
 	});
 
 	it('should set the "endGame" to true if the snake head is far from the wall', () => {
-		const { controller: sut } = makeGameTests();
+		const { gameController: sut } = makeGameTests();
 		sut.snake.snakeBody = [
 			{ x: 30, y: 0 },
 			{ x: -30, y: 0 },
@@ -60,7 +66,7 @@ describe('Controller', () => {
 	});
 
 	it('should set the "endGame" to true if the snake head hits the body', () => {
-		const { controller: sut } = makeGameTests();
+		const { gameController: sut } = makeGameTests();
 		sut.snake.snakeBody = [
 			{ x: 0, y: 0 },
 			{ x: 30, y: 0 },
@@ -74,11 +80,8 @@ describe('Controller', () => {
 	});
 
 	it('should not change "endGame" if the snake head is in the canvas', () => {
-		const { controller: sut } = makeGameTests();
-		sut.snake.snakeBody = [
-			{ x: 30, y: 0 },
-			{ x: 0, y: 0 },
-		];
+		const { gameController: sut } = makeGameTests();
+		sut.snake.snakeBody = initialSnakePosition;
 
 		sut.checkEndGame();
 
@@ -86,7 +89,7 @@ describe('Controller', () => {
 	});
 
 	it('should call the method checkPoint', () => {
-		const { controller: sut } = makeGameTests();
+		const { gameController: sut } = makeGameTests();
 		const spyCheckPoint = jest.spyOn(sut, 'checkPoint');
 
 		sut.loop();
@@ -95,38 +98,41 @@ describe('Controller', () => {
 	});
 
 	it('should increment 10 point if snake header position is equal the food position', () => {
-		const { controller: sut } = makeGameTests();
-		sut.snake.snakeBody = [
-			{ x: 30, y: 0 },
-			{ x: 0, y: 0 },
-		];
-		sut.render.food = { x: 0, y: 0, color: '#fff' };
+		const { gameController: sut } = makeGameTests();
+		sut.snake.snakeBody = initialSnakePosition;
+		sut.render.food = foodWinPosition;
 
 		sut.checkPoint();
 
 		expect(sut.score).toBe(10);
 	});
 
-	it('should reset the food when register the point', () => {
-		const { controller: sut } = makeGameTests();
-		sut.snake.snakeBody = [
-			{ x: 30, y: 0 },
-			{ x: 0, y: 0 },
-		];
-		sut.render.food = { x: 0, y: 0, color: '#fff' };
+	it('should increase the score to 20 points when make a point two moments', () => {
+		const { gameController: sut } = makeGameTests();
+		sut.snake.snakeBody = initialSnakePosition;
+		sut.render.food = foodWinPosition;
+		sut.checkPoint();
+		sut.render.food = foodWinPosition;
 
 		sut.checkPoint();
 
-		expect(sut.render.food).not.toEqual({ x: 0, y: 0, color: '#fff' });
+		expect(sut.score).toBe(20);
+	});
+
+	it('should reset the food when register the point', () => {
+		const { gameController: sut } = makeGameTests();
+		sut.snake.snakeBody = initialSnakePosition;
+		sut.render.food = foodWinPosition;
+
+		sut.checkPoint();
+
+		expect(sut.render.food).not.toEqual(foodWinPosition);
 	});
 
 	it('should the render.foodRender when poit register', () => {
-		const { controller: sut } = makeGameTests();
-		sut.snake.snakeBody = [
-			{ x: 30, y: 0 },
-			{ x: 0, y: 0 },
-		];
-		sut.render.food = { x: 0, y: 0, color: '#fff' };
+		const { gameController: sut } = makeGameTests();
+		sut.snake.snakeBody = initialSnakePosition;
+		sut.render.food = foodWinPosition;
 		const spyRenderRegister = jest.spyOn(sut.render, 'foodRender');
 
 		sut.checkPoint();
@@ -135,11 +141,8 @@ describe('Controller', () => {
 	});
 
 	it('should not reset the food when point not regisner', () => {
-		const { controller: sut } = makeGameTests();
-		sut.snake.snakeBody = [
-			{ x: 30, y: 0 },
-			{ x: 0, y: 0 },
-		];
+		const { gameController: sut } = makeGameTests();
+		sut.snake.snakeBody = initialSnakePosition;
 		sut.render.food = { x: 300, y: 30, color: '#fff' };
 
 		sut.checkPoint();
@@ -148,12 +151,9 @@ describe('Controller', () => {
 	});
 
 	it('should call the method snake.increase', () => {
-		const { controller: sut } = makeGameTests();
-		sut.snake.snakeBody = [
-			{ x: 30, y: 0 },
-			{ x: 0, y: 0 },
-		];
-		sut.render.food = { x: 0, y: 0, color: '#fff' };
+		const { gameController: sut } = makeGameTests();
+		sut.snake.snakeBody = initialSnakePosition;
+		sut.render.food = foodWinPosition;
 		const spySnakeIncrease = jest.spyOn(sut.snake, 'increase');
 
 		sut.checkPoint();
@@ -162,11 +162,8 @@ describe('Controller', () => {
 	});
 
 	it('should not increment point if snake header position is direfent the food position', () => {
-		const { controller: sut } = makeGameTests();
-		sut.snake.snakeBody = [
-			{ x: 30, y: 0 },
-			{ x: 0, y: 0 },
-		];
+		const { gameController: sut } = makeGameTests();
+		sut.snake.snakeBody = initialSnakePosition;
 		sut.render.food = { x: 60, y: 60, color: '#fff' };
 
 		sut.checkPoint();
@@ -175,7 +172,7 @@ describe('Controller', () => {
 	});
 
 	it('should call the snake.move', () => {
-		const { controller: sut } = makeGameTests();
+		const { gameController: sut } = makeGameTests();
 		const spySnakeMove = jest.spyOn(sut.snake, 'move');
 
 		sut.loop();
@@ -184,7 +181,7 @@ describe('Controller', () => {
 	});
 
 	it('property direction must be "top"', () => {
-		const { controller: sut } = makeGameTests();
+		const { gameController: sut } = makeGameTests();
 		let mockKeyBoardEvent: any = {
 			key: 'ArrowUp',
 		};
@@ -195,7 +192,7 @@ describe('Controller', () => {
 	});
 
 	it('property direction must be "right"', () => {
-		const { controller: sut } = makeGameTests();
+		const { gameController: sut } = makeGameTests();
 		let mockKeyBoardEvent: any = {
 			key: 'ArrowRight',
 		};
@@ -206,7 +203,7 @@ describe('Controller', () => {
 	});
 
 	it('property direction must be "bottom"', () => {
-		const { controller: sut } = makeGameTests();
+		const { gameController: sut } = makeGameTests();
 		let mockKeyBoardEvent: any = {
 			key: 'ArrowDown',
 		};
@@ -217,7 +214,7 @@ describe('Controller', () => {
 	});
 
 	it('property direction must be "left"', () => {
-		const { controller: sut } = makeGameTests();
+		const { gameController: sut } = makeGameTests();
 		sut.direction = 'top';
 		let mockKeyBoardEvent: any = {
 			key: 'ArrowLeft',
@@ -229,7 +226,7 @@ describe('Controller', () => {
 	});
 
 	it('should not change direction if key is inverse of sut.direction', () => {
-		const { controller: sut } = makeGameTests();
+		const { gameController: sut } = makeGameTests();
 		sut.direction = 'bottom';
 		let mockKeyBoardEvent: any = {
 			key: 'ArrowTop',
@@ -241,7 +238,7 @@ describe('Controller', () => {
 	});
 
 	it('should not change direction if key is inverse of sut.direction', () => {
-		const { controller: sut } = makeGameTests();
+		const { gameController: sut } = makeGameTests();
 		sut.direction = 'top';
 		let mockKeyBoardEvent: any = {
 			key: 'ArrowDown',
@@ -253,7 +250,7 @@ describe('Controller', () => {
 	});
 
 	it('should not change direction if key is inverse of sut.direction', () => {
-		const { controller: sut } = makeGameTests();
+		const { gameController: sut } = makeGameTests();
 		sut.direction = 'left';
 		let mockKeyBoardEvent: any = {
 			key: 'ArrowRight',
@@ -265,7 +262,7 @@ describe('Controller', () => {
 	});
 
 	it('should not change direction if key is inverse of sut.direction', () => {
-		const { controller: sut } = makeGameTests();
+		const { gameController: sut } = makeGameTests();
 		let mockKeyBoardEvent: any = {
 			key: 'ArrowLeft',
 		};
@@ -273,5 +270,32 @@ describe('Controller', () => {
 		sut.keyboardListener(mockKeyBoardEvent);
 
 		expect(sut.direction).toBe('right');
+	});
+
+	it('should call the element.increaseScoreboard', () => {
+		const { gameController: sut } = makeGameTests();
+		sut.snake.snakeBody = initialSnakePosition;
+		sut.render.food = foodWinPosition;
+		const spyIncreaseScoreboard = jest.spyOn(
+			sut.elementController,
+			'increaseScoreboard',
+		);
+
+		sut.checkPoint();
+
+		expect(spyIncreaseScoreboard).toHaveBeenCalled();
+	});
+
+	it('should call the elementController.gameOver if the game ir over', () => {
+		const { gameController: sut } = makeGameTests();
+		const spyGameOver = jest.spyOn(sut.elementController, 'gameOver');
+		sut.snake.snakeBody = [
+			{ x: 0, y: 0 },
+			{ x: -30, y: 0 },
+		];
+
+		sut.checkEndGame();
+
+		expect(spyGameOver).toHaveBeenCalled();
 	});
 });

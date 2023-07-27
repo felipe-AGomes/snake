@@ -1,9 +1,10 @@
 import { makeGame } from './makeGame';
 
 const mockCanvas = document.createElement('canvas');
+const mockParagrath = document.createElement('p');
 
 export const makeGameTests = () => {
-	const game = makeGame(mockCanvas, 30);
+	const game = makeGame(mockCanvas, 30, mockParagrath);
 	const { canvas, blockSize } = game;
 	const initialSnakeBody = [
 		{ x: canvas.width / 2 - blockSize, y: canvas.width / 2 },
@@ -15,7 +16,7 @@ export const makeGameTests = () => {
 describe('Game', () => {
 	it('should call the this.loop()', () => {
 		const { game: sut } = makeGameTests();
-		const spyControllerLoop = jest.spyOn(sut.controller, 'loop');
+		const spyControllerLoop = jest.spyOn(sut.gameController, 'loop');
 
 		sut.start();
 

@@ -1,15 +1,20 @@
+import { ElementController } from './ElementController';
 import { Render } from './Render';
 import { Direction, Snake } from './Snake';
 
 type KeyBoardMap = { test: boolean; result: Direction };
 
-export class Controller {
+export class GameController {
 	public endGame: boolean = false;
 	public _score: number = 0;
 	public _direction: Direction = 'right';
 	public _temporaryDirection: Direction = 'right';
 	public interval: NodeJS.Timeout | null = null;
-	constructor(public render: Render, public snake: Snake) {}
+	constructor(
+		public render: Render,
+		public snake: Snake,
+		public elementController: ElementController,
+	) {}
 
 	set score(newScore: number) {
 		this._score = newScore;
@@ -56,10 +61,11 @@ export class Controller {
 		if (!this.snake.snakeBody || !food) throw new Error('Snake não renderizada');
 		const snakeHead = this.snake.snakeBody[this.snake.snakeBody?.length - 1];
 		if (snakeHead.x === food.x && snakeHead.y === food.y) {
-			this._score = 10;
+			this._score += 10;
 			this.render.food = null;
 			this.render.foodRender();
 			this.snake.increase();
+			this.elementController.increaseScoreboard(this.score);
 		}
 	}
 
@@ -79,6 +85,7 @@ export class Controller {
 		);
 		if (wallCollision || bodyCollision) {
 			this.endGame = true;
+			this.elementController.gameOver();
 		}
 	}
 
