@@ -23,4 +23,13 @@ describe('Game', () => {
 
 		expect(spyControllerLoop).toBeCalledTimes(1);
 	});
+
+	it('should call the gameController.resetGame', () => {
+		const { game: sut } = makeGameTests();
+		const spyResetGame = jest.spyOn(sut.gameController, 'resetGame');
+
+		sut.reset();
+
+		expect(spyResetGame).toHaveBeenCalled();
+	});
 });

@@ -56,7 +56,9 @@ export default function Home() {
 			>
 				<h2>Fim de jogo</h2>
 				<button
-					// onClick={() => game?.resetGame()}
+					onClick={() => {
+						game?.reset();
+					}}
 					className={S.resetGame}
 				>
 					<AiOutlinePlayCircle size={20} />

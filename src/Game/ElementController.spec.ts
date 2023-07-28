@@ -18,7 +18,16 @@ describe('ElementController', () => {
 		expect(sut.scoreElement.innerText).toBe('20');
 	});
 
-	it('should ', () => {
+	it('should reset the score when sut.resetGame is called', () => {
+		const { elementController: sut } = makeGameTests();
+		sut.gameOverElement.style.display = 'flex';
+
+		sut.resetGame();
+
+		expect(sut.gameOverElement.style.display).toBe('none');
+	});
+
+	it('should set display to "flex" when the game is over', () => {
 		const { elementController: sut } = makeGameTests();
 
 		sut.gameOver();

@@ -10,4 +10,8 @@ export class ElementController {
 	gameOver() {
 		this.gameOverElement.style.display = 'flex';
 	}
+
+	resetGame() {
+		this.gameOverElement.style.display = 'none';
+	}
 }

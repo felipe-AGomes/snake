@@ -298,4 +298,40 @@ describe('GameControllerller', () => {
 
 		expect(spyGameOver).toHaveBeenCalled();
 	});
+
+	it('should reset the score when sut.resetGame is called', () => {
+		const { gameController: sut } = makeGameTests();
+		sut.score = 10;
+
+		sut.resetGame();
+
+		expect(sut.score).toBe(0);
+	});
+
+	it('should ', () => {
+		const { gameController: sut } = makeGameTests();
+		const spyResetGame = jest.spyOn(sut.elementController, 'resetGame');
+
+		sut.resetGame();
+
+		expect(spyResetGame).toHaveBeenCalled();
+	});
+
+	it('should set property endGame to false', () => {
+		const { gameController: sut } = makeGameTests();
+		sut.endGame = true;
+
+		sut.resetGame();
+
+		expect(sut.endGame).toBe(false);
+	});
+
+	it('should call the gameController.loop', () => {
+		const { gameController: sut } = makeGameTests();
+		const spyLoop = jest.spyOn(sut, 'loop');
+
+		sut.resetGame();
+
+		expect(spyLoop).toHaveBeenCalled();
+	});
 });

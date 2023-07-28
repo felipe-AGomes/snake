@@ -5,7 +5,7 @@ import { Direction, Snake } from './Snake';
 type KeyBoardMap = { test: boolean; result: Direction };
 
 export class GameController {
-	public endGame: boolean = false;
+	public _endGame: boolean = false;
 	public _score: number = 0;
 	public _direction: Direction = 'right';
 	public _temporaryDirection: Direction = 'right';
@@ -30,6 +30,14 @@ export class GameController {
 
 	get direction() {
 		return this._direction;
+	}
+
+	get endGame() {
+		return this._endGame;
+	}
+
+	set endGame(newVal: boolean) {
+		this._endGame = newVal;
 	}
 
 	set temporaryDirection(newTemporaryDirection) {
@@ -87,6 +95,13 @@ export class GameController {
 			this.endGame = true;
 			this.elementController.gameOver();
 		}
+	}
+
+	resetGame() {
+		this.elementController.resetGame();
+		this.score = 0;
+		this.endGame = false;
+		this.loop();
 	}
 
 	loop() {
