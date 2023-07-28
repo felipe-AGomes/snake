@@ -45,8 +45,8 @@ export default function Home() {
 				<canvas
 					ref={canvasRef}
 					id='board'
-					width='300'
-					height='300'
+					width='600'
+					height='600'
 				></canvas>
 			</div>
 			<div

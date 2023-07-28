@@ -101,6 +101,11 @@ export class GameController {
 		this.elementController.resetGame();
 		this.score = 0;
 		this.endGame = false;
+		this.snake.reset({
+			canvasWidth: this.render.canvasWidth,
+			blockSize: this.render.blockSize,
+		});
+		this.elementController.increaseScoreboard(this.score);
 		this.loop();
 	}
 

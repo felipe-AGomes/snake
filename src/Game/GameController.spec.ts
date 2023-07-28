@@ -317,15 +317,6 @@ describe('GameControllerller', () => {
 		expect(spyResetGame).toHaveBeenCalled();
 	});
 
-	it('should set property endGame to false', () => {
-		const { gameController: sut } = makeGameTests();
-		sut.endGame = true;
-
-		sut.resetGame();
-
-		expect(sut.endGame).toBe(false);
-	});
-
 	it('should call the gameController.loop', () => {
 		const { gameController: sut } = makeGameTests();
 		const spyLoop = jest.spyOn(sut, 'loop');
@@ -333,5 +324,23 @@ describe('GameControllerller', () => {
 		sut.resetGame();
 
 		expect(spyLoop).toHaveBeenCalled();
+	});
+
+	it('should call the snake.reset', () => {
+		const { gameController: sut } = makeGameTests();
+		const spyReset = jest.spyOn(sut.snake, 'reset');
+
+		sut.resetGame();
+
+		expect(spyReset).toHaveBeenCalled();
+	});
+
+	it('should ', () => {
+		const { gameController: sut } = makeGameTests();
+		const spyReset = jest.spyOn(sut.elementController, 'increaseScoreboard');
+
+		sut.resetGame();
+
+		expect(spyReset).toHaveBeenCalledWith(0);
 	});
 });

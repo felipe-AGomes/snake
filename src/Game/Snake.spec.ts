@@ -67,6 +67,15 @@ describe('Snake', () => {
 
 		sut.increase();
 
-		expect(sut.snakeBody).toEqual([initialSnakeBody[1], ...initialSnakeBody]);
+		expect(sut.snakeBody).toEqual([...initialSnakeBody, initialSnakeBody[1]]);
+	});
+
+	it('should return snakeBody to initial state', () => {
+		const { snake: sut, initialSnakeBody, canvas } = makeGameTests();
+		sut.snakeBody = [...initialSnakeBody, { x: 60, y: 0 }];
+
+		sut.reset({ canvasWidth: canvas.width, blockSize: 30 });
+
+		expect(sut.snakeBody).toEqual(initialSnakeBody);
 	});
 });

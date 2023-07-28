@@ -29,11 +29,18 @@ export class Snake {
 		];
 	}
 
+	reset({ canvasWidth, blockSize }: { canvasWidth: number; blockSize: number }) {
+		this.snakeBody = [
+			{ x: canvasWidth / 2 - blockSize, y: canvasWidth / 2 },
+			{ x: canvasWidth / 2, y: canvasWidth / 2 },
+		];
+	}
+
 	increase() {
 		if (!this.snakeBody) throw new Error('Snake não renderizada');
 		this.snakeBody = [
-			this.snakeBody[this.snakeBody?.length - 1],
 			...this.snakeBody,
+			this.snakeBody[this.snakeBody?.length - 1],
 		];
 	}
 

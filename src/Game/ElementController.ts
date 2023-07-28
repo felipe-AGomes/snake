@@ -4,7 +4,7 @@ export class ElementController {
 		public gameOverElement: HTMLDivElement,
 	) {}
 	increaseScoreboard(score: number) {
-		this.scoreElement.innerText = `${score}`;
+		this.scoreElement.innerText = `${score === 0 ? score : ''}${score}`;
 	}
 
 	gameOver() {
