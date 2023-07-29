@@ -19,9 +19,9 @@ describe('Game', () => {
 		it('should call the this.loop()', () => {
 			const { game: sut } = makeGameTests();
 			const spyControllerLoop = jest.spyOn(sut.gameController, 'loop');
-	
+
 			sut.start();
-	
+
 			expect(spyControllerLoop).toBeCalledTimes(1);
 		});
 	});
@@ -30,11 +30,10 @@ describe('Game', () => {
 		it('should call the gameController.reset', () => {
 			const { game: sut } = makeGameTests();
 			const spyResetGame = jest.spyOn(sut.gameController, 'resetGame');
-	
+
 			sut.reset();
-	
+
 			expect(spyResetGame).toHaveBeenCalled();
 		});
 	});
-
 });

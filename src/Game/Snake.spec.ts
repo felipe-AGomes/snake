@@ -1,4 +1,5 @@
 import { makeGameTests } from './Game.spec';
+import { Snake } from './Snake';
 
 describe('Snake', () => {
 	describe('create', () => {
@@ -12,6 +13,14 @@ describe('Snake', () => {
 	});
 
 	describe('move', () => {
+		it('should not move the snake', () => {
+			const { snake: sut, blockSize, initialSnakeBody } = makeGameTests();
+			sut.snakeBody = initialSnakeBody;
+
+			sut.move('tab' as any, blockSize);
+			expect(sut.snakeBody).toEqual(initialSnakeBody);
+		});
+
 		it('should move the snake', () => {
 			const { snake: sut, blockSize, initialSnakeBody } = makeGameTests();
 			sut.snakeBody = initialSnakeBody;
@@ -66,6 +75,14 @@ describe('Snake', () => {
 	});
 
 	describe('increase', () => {
+		it('should to throw a error if the snake.snakeBody is null', () => {
+			const { snake: sut } = makeGameTests();
+
+			expect(() => {
+				sut.increase();
+			}).toThrow('Snake não renderizada');
+		});
+
 		it('should increase the snakeBody', () => {
 			const { snake: sut, initialSnakeBody } = makeGameTests();
 			sut.snakeBody = initialSnakeBody;

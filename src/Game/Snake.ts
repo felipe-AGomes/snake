@@ -40,7 +40,7 @@ export class Snake {
 		if (!this.snakeBody) throw new Error('Snake não renderizada');
 		this.snakeBody = [
 			...this.snakeBody,
-			this.snakeBody[this.snakeBody?.length - 1],
+			this.snakeBody[this.snakeBody.length - 1],
 		];
 	}
 
