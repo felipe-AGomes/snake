@@ -6,10 +6,10 @@ import { Snake } from './Snake';
 
 export const makeGame = (
 	canvas: HTMLCanvasElement,
-	blockSize: number,
 	scoreElement: HTMLParagraphElement,
 	gameOverElement: HTMLDivElement,
 ) => {
+	const blockSize = canvas.width / 20;
 	const elementController = new ElementController(scoreElement, gameOverElement);
 	const snake = new Snake();
 	const render = new Render(canvas, blockSize, snake);

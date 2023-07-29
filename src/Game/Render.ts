@@ -1,5 +1,5 @@
+import { Util } from '../utils/Util';
 import { Snake } from './Snake';
-import { Util } from './Util';
 
 type Food = {
 	x: number;
@@ -28,7 +28,7 @@ export class Render {
 
 		const ctx = canvas.getContext('2d');
 		if (!ctx) {
-			throw new Error('ctx não intanciado');
+			throw new Error('ctx não instanciado');
 		}
 		this.ctx = ctx;
 	}

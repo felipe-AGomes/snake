@@ -21,7 +21,6 @@ export default function Home() {
 			throw new Error('Ref não instanciada');
 		const { game, gameController } = makeGame(
 			canvas,
-			30,
 			scoreElement,
 			gameOverElement,
 		);
