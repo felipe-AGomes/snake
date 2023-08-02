@@ -13,7 +13,13 @@ export default function Home() {
 	const [game, setGame] = useState<Game | null>(null);
 
 	game?.start();
-
+	console.clear();
+	const digitalSignature = generateDigitalSignature(
+		'felipe-dev',
+		'falmeidagomes13@gmail.com',
+		'Bem-vindo ao meu site! Sinta-se à vontade para explorar e desenvolver com paixão!',
+	);
+	console.log(...digitalSignature);
 	useEffect(() => {
 		const canvas = canvasRef.current;
 		const gameOverElement = endGameRef.current;
@@ -29,12 +35,6 @@ export default function Home() {
 			'keydown',
 			gameController.keyboardListener.bind(gameController),
 		);
-		const digitalSignature = generateDigitalSignature(
-			'felipe-dev',
-			'falmeidagomes13@gmail.com',
-			'Bem-vindo ao meu site! Sinta-se à vontade para explorar e desenvolver com paixão!',
-		);
-		console.log(...digitalSignature);
 		setGame(game);
 	}, []);
 
