@@ -1,4 +1,5 @@
 'use client';
+import { generateDigitalSignature } from 'assinatura-digital';
 import React, { useEffect, useRef, useState } from 'react';
 import S from './home.module.css';
 import { AiOutlinePlayCircle } from 'react-icons/ai';
@@ -28,7 +29,12 @@ export default function Home() {
 			'keydown',
 			gameController.keyboardListener.bind(gameController),
 		);
-
+		const digitalSignature = generateDigitalSignature(
+			'felipe-dev',
+			'falmeidagomes13@gmail.com',
+			'Bem-vindo ao meu site! Sinta-se à vontade para explorar e desenvolver com paixão!',
+		);
+		console.log(...digitalSignature);
 		setGame(game);
 	}, []);
 
